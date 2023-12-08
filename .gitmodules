@@ -1,0 +1,8 @@
+[submodule "fos-web-backend"]
+	path = fos-web-backend
+	url = https://github.com/fosforescent/fos-web-backend
+	branch = main
+[submodule "fos-web-client"]
+	path = fos-web-client
+	url = https://github.com/fosforescent/fos-web-client
+	branch = main
