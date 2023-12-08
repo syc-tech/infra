@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  node-backend:
+    build:
+      context: ../fos-web-backend
+      dockerfile: Dockerfile
+    container_name: node-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm start
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres-db:5432/mydatabase
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
