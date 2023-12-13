@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: temporal-app
+  namespace: argocd
+spec:
+  project: temporal-project
+  source:
+    repoURL: 'https://github.com/davidmnoll/infra.git'
+    targetRevision: HEAD  # Or use a specific tag/branch
+    path: helm-charts/temporal  # The path within your repo to the helm chart
+    helm:
+      releaseName: temporal-cluster
+      valueFiles:
+        - values.yaml
+      valuesObject:
+        debug: true 
+        server:
+          replicaCount: 1
+        cassandra:
+          config:
+            cluster_size: 3
+        cassandra: 
+          enabled: true
+        prometheus:
+          enabled: false
+        grafana:
+          enabled: false
+        elasticsearch:
+          enabled: false 
+        volumePermissions:
+          enabled: true
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: temporal
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: temporal-project
+  namespace: argocd
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project description
+  description: Temporal Project
+
+
+  sourceRepos:
+  - '*'
+  - 'dmn-infra'
+  sourceNamespaces:
+  - default
+  - argocd
+  - temporal
+  - '*'
+
+  destinations:
+  - namespace: temporal
+    server: https://kubernetes.default.svc
+
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+
+  # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
+  namespaceResourceBlacklist:
+  - group: ''
+    kind: ResourceQuota
+  - group: ''
+    kind: LimitRange
+  - group: ''
+    kind: NetworkPolicy
+
+  # Deny all namespaced-scoped resources from being created, except for Deployment and StatefulSet
+  namespaceResourceWhitelist:
+  - group: 'apps'
+    kind: Deployment
+  - group: 'apps'
+    kind: StatefulSet
+  - group: ''  # For core Kubernetes resources
+    kind: '*'  # Allows all resource types
+  - group: 'apps'  # For resources under the 'apps' group
+    kind: '*'  # Allows all resource types under 'apps' group
+  - group: 'batch'  # For batch jobs
+    kind: 'Job'
+  # Enables namespace orphaned resource monitoring.
+  orphanedResources:
+    warn: false
+  
+
