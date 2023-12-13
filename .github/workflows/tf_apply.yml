@@ -49,6 +49,7 @@ jobs:
       GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
       DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
     with:
       step-path: helm-apps
     
@@ -63,6 +64,7 @@ jobs:
       GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
       DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
     with:
       step-path: argo-apps
 
