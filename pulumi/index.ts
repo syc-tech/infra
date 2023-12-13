@@ -36,7 +36,8 @@ const k8s = new azurecontainerservice.ManagedCluster("fosCluster", {
         count: 2,
         vmSize: "Standard_B2s", // Set the VM size as required
         osType: "Linux",
-        name: "aksagentpool"
+        name: "aksagentpool",
+        mode: "System"
     }],
     dnsPrefix: "aks-service",
     linuxProfile: {
