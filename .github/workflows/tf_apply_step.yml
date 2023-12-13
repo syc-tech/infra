@@ -32,6 +32,9 @@ jobs:
           terraform_version: "1.6.3"
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+          token: ${{ secrets.PAT_TOKEN }}
       - name: show dir
         run: ls -la
       - name: Move to Cluster Directory
