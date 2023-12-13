@@ -5,7 +5,9 @@ import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
 // Create an Azure Resource Group
-const resourceGroup = new azure.resources.ResourceGroup("fos-dev");
+const resourceGroup = new azure.resources.ResourceGroup("fos-dev", {
+  location: "East US 2",
+});
 
 
 // Create an Azure Container Registry to store the Node.js backend image
