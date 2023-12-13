@@ -1,0 +1,13 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+data:
+  policy.csv:  |
+    p, role:developer, applications, *, */*, allow
+    p, role:developer, clusters, get, *, allow
+    p, role:developer, repositories, get, *, allow
+    p, role:developer, namespaces, get, temporal, allow
+  policy.default: ''
+  scopes: '[groups]'

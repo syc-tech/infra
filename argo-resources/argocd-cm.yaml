@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  admin.enabled: 'true'
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  application.resourceTrackingMethod: annotation
+  application.namespaces: default, temporal, argocd
+  exec.enabled: 'false'
+  server.rbac.log.enforce.enable: 'false'
+  timeout.hard.reconciliation: 0s
+  timeout.reconciliation: 180s
