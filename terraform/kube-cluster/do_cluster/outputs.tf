@@ -26,3 +26,4 @@ output "kube_config" {
 output "cluster_endpoint" {
   value = data.digitalocean_kubernetes_cluster.primary.endpoint
 }
+

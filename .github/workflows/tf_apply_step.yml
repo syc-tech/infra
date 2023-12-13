@@ -22,6 +22,8 @@ on:
         required: true
       PAT_TOKEN:
         required: true
+      TF_VAR_REGISTRY_CREDENTIALS:
+        required: true
       
 jobs:
   run-apply-step:
@@ -91,6 +93,8 @@ jobs:
 
       - name: Terraform apply
         run: cd terraform/${{ inputs.step-path }} && make apply-cd
+        env:
+          TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.TF_VAR_REGISTRY_CREDENTIALS }}
 
 
       # https://medium.com/@gallaghersam95/the-best-terraform-cd-pipeline-with-github-actions-6ecbaa5f3762

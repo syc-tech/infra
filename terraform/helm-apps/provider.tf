@@ -47,3 +47,18 @@ provider "kubectl" {
   load_config_file       = false
 }
 
+
+
+data "digitalocean_container_registry" "main_registry" {
+  name = "dmn-kubernetes-registry"
+}
+
+
+
+provider "docker" {
+  # Registry URL for DigitalOcean Container Registry
+  registry_auth {
+    address  = "registry.digitalocean.com/${data.digitalocean_container_registry.main_registry.name}"
+    config_file_content = var.REGISTRY_CREDENTIALS
+  }
+}
