@@ -20,6 +20,8 @@ on:
         required: true
       TF_VAR_GITHUB_TOKEN:
         required: true
+      PAT_TOKEN:
+        required: true
       
 jobs:
   run-apply-step:
@@ -34,7 +36,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: 'true'
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN || github.token }}
       - name: show dir
         run: ls -la
       - name: Move to Cluster Directory
