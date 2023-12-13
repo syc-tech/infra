@@ -1,3 +1,3 @@
-name: syc-base
+name: base
 runtime: nodejs
-description: Syctech main infrastructure
+description: syctech main infrastructure

@@ -4,6 +4,16 @@ import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
+
+const armClientId = process?.env.ARM_CLIENT_ID
+const armClientSecret = process?.env.ARM_CLIENT_SECRET
+const armTenantId = process?.env.ARM_TENANT_ID
+
+if (!armClientId || !armClientSecret || !armTenantId) {
+  throw new Error("Missing ARM_CLIENT_ID, ARM_CLIENT_SECRET, or ARM_TENANT_ID environment variable");
+}
+
+
 // Create an Azure Resource Group
 const resourceGroup = new azure.resources.ResourceGroup("fos-dev", {
   location: "East US 2",
@@ -37,6 +47,10 @@ const k8s = new azurecontainerservice.ManagedCluster("fosCluster", {
         }]
       },
     },
+    servicePrincipalProfile: {
+      clientId: armClientId,
+      secret: armClientSecret,
+    }
 });
 
 
