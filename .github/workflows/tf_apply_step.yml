@@ -1,0 +1,120 @@
+
+name: Terraform Apply Step
+
+
+
+on:
+  workflow_call:
+    inputs:
+      step-path:
+        required: true
+        type: string
+    secrets:
+      DOTENV:
+        required: true
+      BACKEND_CONFIG:
+        required: true
+      DIGITALOCEAN_ACCESS_TOKEN:
+        required: true
+      GITHUB_TOKEN_VAL:
+        required: true
+      TF_VAR_GITHUB_TOKEN:
+        required: true
+      
+jobs:
+  run-apply-step:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_VAL }}
+    steps:
+      - uses: hashicorp/setup-terraform@v2
+        with: 
+          terraform_version: "1.6.3"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Move to Cluster Directory
+        run: cd terraform/kube-cluster
+
+      - name: "put dotenv"
+        env: 
+          DOTENV: ${{ secrets.DOTENV }}
+        run: |
+          echo "$DOTENV" > .env
+      - name: "put-backend-config"
+        env: 
+          BACKEND_CONF: ${{ secrets.BACKEND_CONFIG }}
+        run: |
+          echo "$BACKEND_CONF" > ./terraform/backend.tfbackend
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Get PR ID from Merge Commit
+        id: get-pr
+        run: |
+          PR_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN_VAL }}" \
+            "https://api.github.com/search/issues?q=${{ github.sha }}+type:pr+repo:${{ github.repository }}" \
+            | jq -r '.items[0].number')
+          echo "PR_ID=$PR_ID" >> $GITHUB_ENV
+
+      - name: Terraform init
+        run: cd terraform/${{ inputs.step-path }} && make init
+
+      - name: Terraform refresh
+        run: cd terraform/${{ inputs.step-path }} && make refresh
+
+      # - name: Download plan
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: ${{ inputs.step-path }}-tf-plan
+      #     path: terraform/${{ inputs.step-path }}/tf-plan.txt
+
+      # - name: Find Comment
+      #   uses: peter-evans/find-comment@v2
+      #   id: fc
+      #   with:
+      #     issue-number: $PR_ID
+      #     body-regex: '^[^\w]*Terraform Plan.*$'
+
+      # - name: save plan from comment
+      #   run: | 
+      #     cd terraform/${{ inputs.step-path }} && echo "${{ steps.fc.outputs.comment-body }}" | sed -n '/^```/,/^```/p' | sed '/^```/d' >> tfplan.txt
+
+      - name: Terraform apply
+        run: cd terraform/${{ inputs.step-path }} && make apply-cd
+
+
+      # https://medium.com/@gallaghersam95/the-best-terraform-cd-pipeline-with-github-actions-6ecbaa5f3762
+      #   - name: Download Plan
+      #   id: download-plan
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     github_token: ${{ inputs.github_token }}
+      #     workflow: plan.yaml
+      #     pr: ${{ inputs.pr_id }}
+      #     name: ${{ inputs.pr_id }}-tf-plan
+      #     path: ${{ inputs.terraform_directory }}
+  
+      # - name: Terraform Apply
+      #   id: apply
+      #   working-directory: ${{ inputs.terraform_directory }}
+      #   shell: bash
+      #   run: |
+      #     echo 'apply<<EOF' >> $GITHUB_OUTPUT
+      #     terraform apply -input=false -no-color tfplan >> $GITHUB_OUTPUT
+      #     echo 'EOF' >> $GITHUB_OUTPUT
+  
+      # - name: Comment Apply
+      #   id: comment-apply
+      #   uses: peter-evans/create-or-update-comment@v2
+      #   with:
+      #     token: ${{ inputs.github_token }}
+      #     issue-number: ${{ inputs.pr_id }}
+      #     body: |
+      #       Terraform Apply:
+  
+      #       ```
+      #       ${{ steps.apply.outputs.apply }}
+      #       ```

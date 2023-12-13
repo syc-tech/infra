@@ -1,0 +1,112 @@
+
+name: Terraform Plan Step
+
+
+
+on:
+  workflow_call:
+    inputs:
+      step-path:
+        required: true
+        type: string
+    secrets:
+      DOTENV:
+        required: true
+      BACKEND_CONFIG:
+        required: true
+      DIGITALOCEAN_ACCESS_TOKEN:
+        required: true
+    outputs:
+      changes:
+        description: "0 if no changes, 1 if changes"
+        value: ${{ jobs.run-step.outputs.changes }}
+
+jobs:
+  run-step:
+    runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.check_changes.outputs.changes }}
+    steps:
+      - uses: hashicorp/setup-terraform@v2
+        with: 
+          terraform_version: "1.6.3"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: "put dotenv"
+        env: 
+          DOTENV: ${{ secrets.DOTENV }}
+        run: |
+          echo "$DOTENV" > .env
+      - name: "put-backend-config"
+        env: 
+          BACKEND_CONF: ${{ secrets.BACKEND_CONFIG }}
+        run: |
+          echo "$BACKEND_CONF" > ./terraform/backend.tfbackend
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      # - name: configure aws cli
+      #   run: aws configure --profile digitalocean && export AWS_PROFILE=digitalocean
+
+
+      - name: Terraform init
+        env:
+          TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd terraform/${{ inputs.step-path }} && make init
+
+      - name: Terraform refresh
+        run: cd terraform/${{ inputs.step-path }} && make refresh
+
+
+      - name: Terraform Plan
+        env:
+          TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: plan
+        shell: bash
+        run: |
+          echo 'plan<<EOF' >> $GITHUB_OUTPUT
+          cd terraform/${{ inputs.step-path }} && echo $(make plan-cd) >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+          cd ../.. && echo $(cat $GITHUB_OUTPUT) >> ./${{ inputs.step-path }}-tf-plan
+
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          if $(echo $(cat ./${{ inputs.step-path }}-tf-plan) | grep -q "Your infrastructure matches the configuration"); then
+            echo "changes=0" && echo "changes=0" >> $GITHUB_OUTPUT
+          else
+            echo "changes=1" && echo "changes=1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Delete Artifact
+        if: steps.check_changes.outputs.changes == '1'
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: ${{ inputs.step-path }}-tf-plan
+
+      - name: Save Artifact
+        id: save-artifact
+        if: steps.check_changes.outputs.changes == '1'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.step-path }}-tf-plan
+          path: ./${{ inputs.step-path }}-tf-plan
+
+      - name: Comment Plan
+        id: comment-plan
+        if: steps.check_changes.outputs.changes == '1'
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.number }}
+          body: |
+            Terraform Plan:
+
+            ```
+            ${{ steps.plan.outputs.plan }}
+            ```
+
+            Plan saved to GH artifacts.
+            
