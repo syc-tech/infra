@@ -43,7 +43,7 @@ resource "helm_release" "temporal-cluster" {
   }
 }
 
-resource "kubernetes_ingress_v1" "argocd_server_ingress" {
+resource "kubernetes_ingress_v1" "temporal_server_ingress" {
   metadata {
     name      = "temporal-server-ingress"
     namespace = "temporal"
@@ -82,7 +82,7 @@ resource "kubernetes_ingress_v1" "argocd_server_ingress" {
   }
 }
 
-resource "kubernetes_manifest" "argocd-certificate" {
+resource "kubernetes_manifest" "temporal-certificate" {
   manifest = {
     apiVersion = "cert-manager.io/v1"
     kind       = "Certificate"
