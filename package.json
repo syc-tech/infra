@@ -1,6 +1,6 @@
 {
     "name": "fos-base",
-    "main": "index.ts",
+    "main": "pulumi/index.ts",
     "devDependencies": {
         "@types/node": "^16.18.68"
     },
