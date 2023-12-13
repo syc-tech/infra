@@ -41,52 +41,52 @@ const k8s = new azurecontainerservice.ManagedCluster("fos-cluster", {
 
 
 
-// Get the kubeconfig
-let k8sconfig = pulumi
-  .all([k8s.name, resourceGroup.name])
-  .apply(([clusterName, rgName]) =>
-    azure.containerservice.getKubeConfig({
-      resourceGroupName: rgName,
-      resourceName: clusterName,
-    })
-  )
-  .then((kubeconfig) => kubeconfig.kubeConfig);
+// // Get the kubeconfig
+// let k8sconfig = pulumi
+//   .all([k8s.name, resourceGroup.name])
+//   .apply(([clusterName, rgName]) =>
+//     azure.containerservice.getKubeConfig({
+//       resourceGroupName: rgName,
+//       resourceName: clusterName,
+//     })
+//   )
+//   .then((kubeconfig) => kubeconfig.kubeConfig);
 
 
 
-// Create a k8s provider instance using the kubeconfig
-let provider = new k8s.Provider("k8sProvider", { kubeconfig: k8sconfig });
+// // Create a k8s provider instance using the kubeconfig
+// let provider = new k8s.Provider("k8sProvider", { kubeconfig: k8sconfig });
 
-// Assume the Node.js backend image is already built and pushed to Azure Container Registry
-const containerImageName = "YOUR_ACR_NAME.azurecr.io/fos-backend:latest";
+// // Assume the Node.js backend image is already built and pushed to Azure Container Registry
+// const containerImageName = "YOUR_ACR_NAME.azurecr.io/fos-backend:latest";
 
-// Setup the Kubernetes deployment and service for the Node.js backend
-const appName = "node-backend-app";
+// // Setup the Kubernetes deployment and service for the Node.js backend
+// const appName = "node-backend-app";
 
 
 
-// Push a Docker image to the Azure Container Registry
-let image = new docker.Image("appImage", {
-  build: {
-    context: "<your-dockerfile-path>",
-  },
-  imageName: `${registry.loginServer}/mynginx:v1.0.0`,
-  registry: {
-    server: registry.loginServer,
-    username: registry.,
-    password: registry.adminPassword,
-  },
-});
+// // Push a Docker image to the Azure Container Registry
+// let image = new docker.Image("appImage", {
+//   build: {
+//     context: "<your-dockerfile-path>",
+//   },
+//   imageName: `${registry.loginServer}/mynginx:v1.0.0`,
+//   registry: {
+//     server: registry.loginServer,
+//     username: registry.,
+//     password: registry.adminPassword,
+//   },
+// });
 
-// Deploy a Kubernetes manifest to the AKS cluster
-let appDeployment = new k8s.yaml.ConfigFile("app-deployment", {
-  file: "<your-manifest-file-path>",
-  transformations: [(obj) => {
-    if (obj.metadata.labels['app'] === 'my-app') {
-      obj.spec.template.spec.containers[0].image = "<your-docker-image>"; // replace with your docker image
-    }
-  }]
-}, { provider: provider });
+// // Deploy a Kubernetes manifest to the AKS cluster
+// let appDeployment = new k8s.yaml.ConfigFile("app-deployment", {
+//   file: "<your-manifest-file-path>",
+//   transformations: [(obj) => {
+//     if (obj.metadata.labels['app'] === 'my-app') {
+//       obj.spec.template.spec.containers[0].image = "<your-docker-image>"; // replace with your docker image
+//     }
+//   }]
+// }, { provider: provider });
 
 // ... (Details for setting up Kubernetes deployment and service) ...
 
