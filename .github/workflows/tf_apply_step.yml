@@ -32,6 +32,8 @@ jobs:
           terraform_version: "1.6.3"
       - name: Checkout
         uses: actions/checkout@v3
+      - name: show dir
+        run: ls -la
       - name: Move to Cluster Directory
         run: cd terraform/kube-cluster
 
