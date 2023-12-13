@@ -7,3 +7,6 @@ run-local-db:
 
 push-db:
 	npx prisma db push --schema=./prisma/schema.prisma
+	
+setup:
+	npm install
