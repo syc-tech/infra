@@ -31,7 +31,7 @@ jobs:
         with:
           command: refresh
           work-dir: pulumi
-          stack-name: syc-tech/syc-base/base
+          stack-name: syc-tech/syc-base
           # upsert: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
@@ -39,7 +39,7 @@ jobs:
         with:
           command: up
           work-dir: pulumi
-          stack-name: syc-tech/syc-base/base
+          stack-name: syc-tech/syc-base
           # upsert: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
