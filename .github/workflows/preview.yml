@@ -13,13 +13,15 @@ jobs:
         with:
           work-dir: pulumi
           command: refresh
-          stack-name: fos-base
+          stack-name: fos/base
+          upsert: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - uses: pulumi/actions@v4
         with:
           work-dir: pulumi
           command: preview
-          stack-name: fos-base
+          stack-name: fos/base
+          upsert: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
