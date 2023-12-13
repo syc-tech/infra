@@ -11,7 +11,7 @@ const resourceGroup = new azure.resources.ResourceGroup("fos-dev", {
 
 
 // Create an Azure Container Registry to store the Node.js backend image
-const registry = new azure.containerregistry.Registry("fos-registry", {
+const registry = new azure.containerregistry.Registry("fosRegistry", {
   resourceGroupName: resourceGroup.name,
   sku: {
       name: "Basic",
@@ -20,7 +20,7 @@ const registry = new azure.containerregistry.Registry("fos-registry", {
 
 
 // Create an Azure Container Service (ACS) instance with a Node.js backend
-const k8s = new azurecontainerservice.ManagedCluster("fos-cluster", {
+const k8s = new azurecontainerservice.ManagedCluster("fosCluster", {
     resourceGroupName: resourceGroup.name,
     agentPoolProfiles: [{
         count: 2,
