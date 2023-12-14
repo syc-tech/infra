@@ -39,10 +39,10 @@ resource "argocd_project" "fos-project" {
   }
   spec {
     description = "fos project"
-    source_repos = ["dmn-infra"]
+    source_repos = ["*"]
     destination {
       server = "https://kubernetes.default.svc"
-      namespace = "fos-web-backend"
+      namespace = "fos"
     }
   }
 }
