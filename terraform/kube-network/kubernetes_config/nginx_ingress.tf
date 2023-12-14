@@ -21,4 +21,3 @@ resource "helm_release" "nginx_ingress_chart" {
   }
 }
 
-

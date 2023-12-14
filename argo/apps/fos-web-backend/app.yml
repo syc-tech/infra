@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fos-web-backend
+  namespace: argocd  # Assuming Argo CD is installed in the 'argocd' namespace
+spec:
+  project: fos-project
+  source:
+    repoURL: 'https://github.com/davidmnoll/infra.git'
+    path: argo/apps/fos-web-backend  # Path to the folder containing your deployment manifest
+    targetRevision: HEAD  # or a specific tag/branch
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: fos
+  syncPolicy:
+    automated:  # Optional: Uncomment to enable automatic sync
+      prune: true
+      selfHeal: true

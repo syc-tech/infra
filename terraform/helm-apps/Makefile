@@ -7,6 +7,8 @@ init:
 init-reconfigure:
 	terraform init -backend-config=../backend.tfbackend -reconfigure
 
+init-upgrade:
+	terraform init -backend-config=../backend.tfbackend -upgrade
 
 plan:
 	terraform plan

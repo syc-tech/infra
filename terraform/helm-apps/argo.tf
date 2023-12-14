@@ -1,21 +1,42 @@
 
 resource "kubectl_manifest" "argo_rbac_cm" {
-  yaml_body = file("../../argo-resources/argocd-rbac-cm.yaml")
+  yaml_body = file("../../argo/resources/argocd-rbac-cm.yaml")
   depends_on = [ helm_release.argo_cd ]
 } 
 
 
 resource "kubectl_manifest" "argo_clusterrolebinding" {
-  yaml_body = file("../../argo-resources/argocd-clusterrolebinding.yaml")
+  yaml_body = file("../../argo/resources/argocd-clusterrolebinding.yaml")
   depends_on = [ helm_release.argo_cd ]
 } 
 
 
 
 resource "kubectl_manifest" "argo_cm" {
-  yaml_body = file("../../argo-resources/argocd-cm.yaml")
+  yaml_body = file("../../argo/resources/argocd-cm.yaml")
   depends_on = [ helm_release.argo_cd ]
 } 
+
+data "digitalocean_domain" "syc" {
+  name = "syctech.io"
+}
+
+
+data "kubernetes_service" "nginx_lb" {
+  metadata {
+    name      = "nginx-ingress-controller"  # Replace with the actual service name
+    namespace = "default"               # Replace with the correct namespace
+  }
+}
+
+resource "digitalocean_record" "argocd_a_record" {
+  domain = data.digitalocean_domain.syc.name
+  type   = "A"
+  name   = "argocd"
+  value  = data.kubernetes_service.nginx_lb.status.0.load_balancer.0.ingress.0.ip
+  ttl    = 3600
+  depends_on = [ helm_release.argo_cd ]
+}
 
 
 
@@ -82,7 +103,7 @@ resource "kubernetes_ingress_v1" "argocd_server_ingress" {
   spec {
     ingress_class_name = "nginx"
     rule {
-      host = "argocd.davidmnoll.com"
+      host = "argocd.syctech.io"
       http {
         path {
           backend {
@@ -100,7 +121,7 @@ resource "kubernetes_ingress_v1" "argocd_server_ingress" {
       }
     }
     tls {
-      hosts      = ["argocd.davidmnoll.com"]
+      hosts      = ["argocd.syctech.io"]
       secret_name = "argocd-server-tls"
     }
   }
@@ -120,9 +141,9 @@ resource "kubernetes_manifest" "argocd-certificate" {
         name = "letsencrypt-prod"
         kind = "ClusterIssuer"
       }
-      commonName = "argocd.davidmnoll.com"
+      commonName = "argocd.syctech.io"
       dnsNames = [
-        "argocd.davidmnoll.com",
+        "argocd.syctech.io",
       ]
     }
   }

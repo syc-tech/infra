@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fos-web
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+        - name: dmn-kubernetes-registry-credentials
+      containers:
+        - name: fos-web-backend-container
+          image: fos-web-backend
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fos-web-db-credentials
+                  key: url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: fos-web-jwt-secret
+                  key: jwt_secret
+            # ... other environment variables for host, port, dbname

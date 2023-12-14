@@ -27,6 +27,7 @@ on:
       
 jobs:
   run-apply-step:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_VAL }}

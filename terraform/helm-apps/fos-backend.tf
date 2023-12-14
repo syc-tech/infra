@@ -1,4 +1,10 @@
 
+resource "kubernetes_namespace" "fos-backend" {
+  metadata {
+    name = "fos"
+  }
+}
+
 
 
 # resource "docker_image" "example" {

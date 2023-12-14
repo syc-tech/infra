@@ -59,7 +59,7 @@ data "kubernetes_secret" "argocd_initial_admin_secret" {
 }
 
 provider "argocd" {
-  server_addr = "argocd.davidmnoll.com"
+  server_addr = "argocd.syctech.io"
   username    = "admin"
   password    = data.kubernetes_secret.argocd_initial_admin_secret.data["password"]
 }

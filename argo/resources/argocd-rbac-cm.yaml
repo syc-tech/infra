@@ -9,5 +9,6 @@ data:
     p, role:developer, clusters, get, *, allow
     p, role:developer, repositories, get, *, allow
     p, role:developer, namespaces, get, temporal, allow
+    p, role:developer, namespaces, get, fos, allow
   policy.default: ''
   scopes: '[groups]'

@@ -2,9 +2,8 @@
 
 
 
-
 resource "digitalocean_container_registry_docker_credentials" "kubernetes_registry_credentials" {
-  registry_name = data.digitalocean_container_registry.main_registry.name
+  registry_name = data.digitalocean_container_registry.primary.name
 }
 
 
