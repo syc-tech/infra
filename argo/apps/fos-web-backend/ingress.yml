@@ -15,7 +15,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: fos-web-backend
+            name: fos-web
             port:
               number: 80
   tls:

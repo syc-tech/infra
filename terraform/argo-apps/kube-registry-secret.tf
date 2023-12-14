@@ -15,7 +15,7 @@ resource "digitalocean_container_registry_docker_credentials" "kubernetes_regist
 resource "kubernetes_secret" "registry_credentials" {
   metadata {
     name = "syc-kubernetes-registry-credentials"
-    namespace = "default"  # or any other namespace where you need to pull images
+    namespace = "fos"  # or any other namespace where you need to pull images
   }
 
   data = {

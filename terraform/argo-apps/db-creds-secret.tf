@@ -14,7 +14,7 @@ data "digitalocean_database_user" "fos_user" {
 resource "kubernetes_secret" "db_credentials" {
   metadata {
     name      = "fos-web-db-credentials"
-    namespace = "default"
+    namespace = "fos"
   }
 
   data = {
