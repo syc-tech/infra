@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fos-web
+  name: fos-web-deployment
   namespace: fos
 spec:
   selector:
