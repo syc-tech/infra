@@ -5,7 +5,7 @@ metadata:
   namespace: fos
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    # nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
   - host: api.fosforescent.com
@@ -14,10 +14,8 @@ spec:
       - path: /
         pathType: Prefix
         backend:
-          service:
-            name: fos-web
-            port:
-              number: 80
+          serviceName: fos-web-service
+          servicePort: 80
   tls:
   - hosts:
     - api.fosforescent.com
