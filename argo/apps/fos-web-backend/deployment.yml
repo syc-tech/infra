@@ -17,6 +17,8 @@ spec:
       containers:
         - name: fos-web-backend-container
           image: registry.digitalocean.com/dmn-kubernetes-registry/fos-web-backend:latest
+          ports:
+          - containerPort: 80           
           env:
             - name: DATABASE_URL
               valueFrom:
