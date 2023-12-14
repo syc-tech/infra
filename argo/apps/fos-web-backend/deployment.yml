@@ -4,14 +4,14 @@ metadata:
   name: fos-web
   namespace: fos
 spec:
+  selector:
+    matchLabels:
+      app: fos-web
   template:
     metadata:
       labels:
         app: fos-web
     spec:
-      selector:
-        matchLabels:
-          app: fos-web
       imagePullSecrets:
         - name: dmn-kubernetes-registry-credentials
       containers:
