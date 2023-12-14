@@ -6,7 +6,7 @@ metadata:
 spec:
   project: temporal-project
   source:
-    repoURL: 'https://github.com/davidmnoll/infra.git'
+    repoURL: 'https://github.com/syc-tech/infra.git'
     targetRevision: HEAD  # Or use a specific tag/branch
     path: helm-charts/temporal  # The path within your repo to the helm chart
     helm:

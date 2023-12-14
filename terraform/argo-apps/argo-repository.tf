@@ -10,8 +10,8 @@
 # } 
 
 
-resource "argocd_repository" "dmn-infra" {
-  repo = "https://github.com/davidmnoll/infra"
+resource "argocd_repository" "syc-infra" {
+  repo = "https://github.com/syc-tech/infra"
   username = "davidmnoll"
   password = var.GITHUB_TOKEN
   name = "dmn-infra"

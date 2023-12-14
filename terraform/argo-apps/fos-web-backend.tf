@@ -89,7 +89,7 @@ resource "kubectl_manifest" "fos_argo_app" {
 #     }
 
 #     source {
-#       repo_url        = "https://github.com/davidmnoll/infra"
+#       repo_url        = "https://github.com/syc-tech/infra"
 #       path            = "helm-charts/temporal"
 
 #       helm {

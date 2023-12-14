@@ -6,7 +6,7 @@ metadata:
 spec:
   project: fos-project
   source:
-    repoURL: 'https://github.com/davidmnoll/infra.git'
+    repoURL: 'https://github.com/syc-tech/infra.git'
     path: argo/apps/fos-web-backend
     targetRevision: HEAD  # or a specific tag/branch
   destination:
