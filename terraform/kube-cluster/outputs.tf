@@ -6,6 +6,3 @@
 #   value = var.write_kubeconfig ? abspath("${path.root}/kubeconfig") : "none"
 # }
 
-output "do_token" {
-  value = var.DO_TOKEN
-}
