@@ -2,6 +2,10 @@
 
 
 
+data "digitalocean_container_registry" "primary" {
+  name = "dmn-kubernetes-registry"
+}
+
 resource "digitalocean_container_registry_docker_credentials" "kubernetes_registry_credentials" {
   registry_name = data.digitalocean_container_registry.primary.name
 }
@@ -15,7 +19,7 @@ resource "kubernetes_secret" "registry_credentials" {
   }
 
   data = {
-    ".dockerconfigjson" = base64encode(digitalocean_container_registry_docker_credentials.kubernetes_registry_credentials.docker_credentials)
+    ".dockerconfigjson" = digitalocean_container_registry_docker_credentials.kubernetes_registry_credentials.docker_credentials
   }
 
   type = "kubernetes.io/dockerconfigjson"

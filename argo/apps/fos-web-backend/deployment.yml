@@ -16,7 +16,7 @@ spec:
         - name: syc-kubernetes-registry-credentials
       containers:
         - name: fos-web-backend-container
-          image: fos-web-backend
+          image: registry.digitalocean.com/dmn-kubernetes-registry/fos-web-backend:latest
           env:
             - name: DATABASE_URL
               valueFrom:
