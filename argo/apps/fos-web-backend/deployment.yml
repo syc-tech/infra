@@ -13,7 +13,7 @@ spec:
         app: fos-web
     spec:
       imagePullSecrets:
-        - name: dmn-kubernetes-registry-credentials
+        - name: syc-kubernetes-registry-credentials
       containers:
         - name: fos-web-backend-container
           image: fos-web-backend
