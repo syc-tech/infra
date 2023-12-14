@@ -40,10 +40,18 @@ resource "argocd_project" "fos-project" {
   spec {
     description = "fos project"
     source_repos = ["*"]
+    source_namespaces = ["*"]
+
     destination {
       server = "https://kubernetes.default.svc"
       namespace = "fos"
     }
+
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "argocd"
+    }
+
   }
 }
 
