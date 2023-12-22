@@ -2,10 +2,6 @@
 	path = fos-web-backend
 	url = https://github.com/fosforescent/fos-web-backend
 	branch = main
-[submodule "fos-web-client"]
-	path = fos-web-client
-	url = https://github.com/fosforescent/fos-web-client
-	branch = main
 [submodule "helm-charts/argo"]
 	path = helm-charts/argo
 	url = https://github.com/argoproj/argo-helm.git
