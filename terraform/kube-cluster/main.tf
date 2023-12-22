@@ -12,6 +12,12 @@ terraform {
       source = "hashicorp/local"
     }
 
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4.0"
+    }
+
+
   }
 
 
@@ -39,6 +45,9 @@ provider "digitalocean" {
   token = var.DO_TOKEN
 }
 
+provider "cloudflare" {
+  api_token = var.CLOUDFLARE_TOKEN
+}
 
 module "cluster_setup_instance" {
   source             = "./do_cluster"
