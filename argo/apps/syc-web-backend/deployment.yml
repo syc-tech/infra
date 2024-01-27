@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syc-web-deployment
+  namespace: syc
+spec:
+  selector:
+    matchLabels:
+      app: syc-web
+  template:
+    metadata:
+      labels:
+        app: syc-web
+    spec:
+      imagePullSecrets:
+        - name: syc-kubernetes-registry-credentials
+      containers:
+        - name: syc-web
+          image: registry.digitalocean.com/dmn-kubernetes-registry/syc-web-backend:latest
+          ports:
+          - containerPort: 80           
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: syc-web-db-credentials
+                  key: url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: syc-web-jwt-secret
+                  key: jwt_secret
+            # ... other environment variables for host, port, dbname

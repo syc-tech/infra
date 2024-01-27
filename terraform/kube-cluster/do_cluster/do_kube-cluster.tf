@@ -6,7 +6,6 @@ resource "digitalocean_kubernetes_cluster" "main_cluster" {
     region         = var.cluster_region
     version        = data.digitalocean_kubernetes_versions.current.latest_version
 
-
     node_pool {
         auto_scale        = true
         labels            = {}

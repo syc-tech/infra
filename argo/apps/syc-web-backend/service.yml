@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: syc-web-service
+  namespace: syc
+  labels:
+    app: syc-web
+spec:
+  selector:
+    app: syc-web
+  ports:
+    - port: 80

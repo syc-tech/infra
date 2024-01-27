@@ -2,7 +2,7 @@
 admin.enabled: 'true'
 application.instanceLabelKey: argocd.argoproj.io/instance
 application.resourceTrackingMethod: annotation
-application.namespaces: ['temporal', 'argocd', 'fos']
+application.namespaces: ['default', 'temporal', 'argocd', 'fos', 'syc', 'userspace']
 exec.enabled: 'false'
 server.rbac.log.enforce.enable: 'false'
 timeout.hard.reconciliation: 0s

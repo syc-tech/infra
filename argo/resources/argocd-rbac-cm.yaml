@@ -8,7 +8,10 @@ data:
     p, role:developer, applications, *, */*, allow
     p, role:developer, clusters, get, *, allow
     p, role:developer, repositories, get, *, allow
+    p, role:developer, namespaces, get, default, allow
     p, role:developer, namespaces, get, temporal, allow
     p, role:developer, namespaces, get, fos, allow
+    p, role:developer, namespaces, get, syc, allow
+    p, role:developer, namespaces, get, userspace, allow
   policy.default: ''
   scopes: '[groups]'

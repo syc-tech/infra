@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: syc-web-backend
+  namespace: argocd
+spec:
+  project: syc-project
+  source:
+    repoURL: 'https://github.com/syc-tech/infra.git'
+    path: argo/apps/syc-web-backend
+    targetRevision: HEAD  
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: syc
+  syncPolicy:
+    automated:  
+      prune: true
+      selfHeal: true

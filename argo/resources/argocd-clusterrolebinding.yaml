@@ -23,3 +23,9 @@ subjects:
 - kind: ServiceAccount
   name: argocd-server
   namespace: fos
+- kind: ServiceAccount
+  name: argocd-server
+  namespace: syc
+- kind: ServiceAccount
+  name: argocd-server
+  namespace: userspace
