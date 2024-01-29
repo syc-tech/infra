@@ -61,7 +61,7 @@ resource "kubernetes_secret" "syc_web_jwt_secret" {
 
 resource "kubectl_manifest" "syc_argo_app" {
   yaml_body = file("../../argo/apps/syc-web-backend/app.yml")
-  depends_on = [ argocd_project.syc-project, kubernetes_secret.syc_web_jwt_secret]
+  depends_on = [ argocd_project.syc-project, kubernetes_secret.syc_web_jwt_secret, kubernetes_secret.syc_stripe_info, kubernetes_secret.syc_db_credentials]
 }
 
 
@@ -86,6 +86,20 @@ resource "kubernetes_secret" "syc_db_credentials" {
     port     = tostring(data.digitalocean_database_cluster.postgres_cluster.port)
     dbname   = "syc-web-backend"
     url      = "postgresql://${data.digitalocean_database_user.syc_web_user.name}:${data.digitalocean_database_user.syc_web_user.password}@${data.digitalocean_database_cluster.postgres_cluster.host}:${tostring(data.digitalocean_database_cluster.postgres_cluster.port)}/syc-web-backend"
+  }
+}
+
+
+resource "kubernetes_secret" "syc_stripe_info" {
+  metadata {
+    name      = "syc-stripe-secret"
+    namespace = "syc"
+  }
+
+  data = {
+    token = var.STRIPE_TOKEN
+    subscription-price-id = var.STRIPE_SUBSCRIPTION_PRICE_ID
+    webhook-secret = var.STRIPE_WEBHOOK_SECRET
   }
 }
 

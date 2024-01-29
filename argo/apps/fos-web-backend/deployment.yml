@@ -13,7 +13,7 @@ spec:
         app: fos-web
     spec:
       imagePullSecrets:
-        - name: syc-kubernetes-registry-credentials
+        - name: fos-kubernetes-registry-credentials
       containers:
         - name: fos-web
           image: registry.digitalocean.com/dmn-kubernetes-registry/fos-web-backend:latest
@@ -25,9 +25,5 @@ spec:
                 secretKeyRef:
                   name: fos-web-db-credentials
                   key: url
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: fos-web-jwt-secret
-                  key: jwt_secret
+
             # ... other environment variables for host, port, dbname

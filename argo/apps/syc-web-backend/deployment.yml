@@ -30,4 +30,19 @@ spec:
                 secretKeyRef:
                   name: syc-web-jwt-secret
                   key: jwt_secret
+            - name: STRIPE_TOKEN
+              valueFrom: 
+                secretKeyRef:
+                  name: syc-stripe-secret
+                  key: token
+            - name: STRIPE_SUBSCRIPTION_PRICE_ID
+              valueFrom: 
+                secretKeyRef:
+                  name: syc-stripe-secret
+                  key: subscription-price-id
+            - name: STRIPE_WEBHOOK_SECRET
+              valueFrom: 
+                secretKeyRef:
+                  name: syc-stripe-secret
+                  key: webhook-secret
             # ... other environment variables for host, port, dbname

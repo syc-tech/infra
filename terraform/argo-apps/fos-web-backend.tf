@@ -49,27 +49,11 @@ resource "argocd_project" "fos-project" {
   }
 }
 
-resource "random_password" "jwt_secret" {
-  length  = 16  # You can adjust the length as needed
-  special = true
-  # You can also set other parameters like `lower`, `upper`, `number` based on your requirements
-}
-
-resource "kubernetes_secret" "fos_web_jwt_secret" {
-  metadata {
-    name      = "fos-web-jwt-secret"
-    namespace = "fos"  # Update the namespace as needed
-  }
-
-  data = {
-    "jwt_secret" = random_password.jwt_secret.result
-  }
-}
 
 
 resource "kubectl_manifest" "fos_argo_app" {
   yaml_body = file("../../argo/apps/fos-web-backend/app.yml")
-  depends_on = [ argocd_project.fos-project, kubernetes_secret.fos_web_jwt_secret]
+  depends_on = [ argocd_project.fos-project]
 }
 
 
