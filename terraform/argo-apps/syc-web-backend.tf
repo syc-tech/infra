@@ -100,6 +100,7 @@ resource "kubernetes_secret" "syc_stripe_info" {
     token = var.STRIPE_TOKEN
     subscription-price-id = var.STRIPE_SUBSCRIPTION_PRICE_ID
     webhook-secret = var.STRIPE_WEBHOOK_SECRET
+    topup-price-id = var.STRIPE_TOPUP_PRICE_ID
   }
 }
 
