@@ -50,4 +50,25 @@ spec:
                 secretKeyRef:
                   name: syc-stripe-secret
                   key: topup-price-id
+            - name: POSTMARK_API_TOKEN
+              valueFrom: 
+                secretKeyRef:
+                  name: syc-postmark-secret
+                  key: token
+            - name: EMAIL_WEBHOOK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: syc-emailwebhook-secret
+                  key: pwd
+
             # ... other environment variables for host, port, dbname
+        - name: syc-email
+          image: registry.digitalocean.com/dmn-kubernetes-registry/syc-email-svc:latest
+          ports:
+          - containerPort: 80           
+          # env:
+          #   - name: DATABASE_URL
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: syc-web-db-credentials
+          #         key: url

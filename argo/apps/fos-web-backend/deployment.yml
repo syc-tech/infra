@@ -25,5 +25,7 @@ spec:
                 secretKeyRef:
                   name: fos-web-db-credentials
                   key: url
+            - name: SYC_API_URL
+              value: "https://api.syctech.io"
 
             # ... other environment variables for host, port, dbname

@@ -14,7 +14,7 @@ resource "digitalocean_record" "syc_api_a_record" {
   name   = "api"
   value  = data.kubernetes_service.nginx_lb.status.0.load_balancer.0.ingress.0.ip
   ttl    = 3600
-  depends_on = [ kubectl_manifest.fos_argo_app ]
+  depends_on = [ kubectl_manifest.syc_argo_app ]
 }
 
 
@@ -101,6 +101,30 @@ resource "kubernetes_secret" "syc_stripe_info" {
     subscription-price-id = var.STRIPE_SUBSCRIPTION_PRICE_ID
     webhook-secret = var.STRIPE_WEBHOOK_SECRET
     topup-price-id = var.STRIPE_TOPUP_PRICE_ID
+  }
+}
+
+
+resource "kubernetes_secret" "syc_postmark_secret" {
+  metadata {
+    name      = "syc-postmark-secret"
+    namespace = "syc"
+  }
+
+  data = {
+    token = var.POSTMARK_API_TOKEN
+  }
+}
+
+
+resource "kubernetes_secret" "syc_email_webhook_info" {
+  metadata {
+    name      = "syc-emailwebhook-secret"
+    namespace = "syc"
+  }
+
+  data = {
+    pwd = var.EMAIL_WEBHOOK_PASSWORD
   }
 }
 
