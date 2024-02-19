@@ -27,5 +27,10 @@ spec:
                   key: url
             - name: SYC_API_URL
               value: "https://api.syctech.io"
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fos-openai-credentials
+                  key: key
 
             # ... other environment variables for host, port, dbname

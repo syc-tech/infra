@@ -37,3 +37,8 @@ variable "EMAIL_WEBHOOK_PASSWORD" {
   type = string
   default = "" 
 }
+
+variable "OPENAI_API_KEY" {
+  type = string
+  default = ""
+}

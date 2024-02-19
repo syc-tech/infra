@@ -84,6 +84,18 @@ resource "kubernetes_secret" "fos_db_credentials" {
 }
 
 
+resource "kubernetes_secret" "fos_openai_credentials" {
+  metadata {
+    name      = "fos-openai-credentials"
+    namespace = "fos"
+  }
+
+  data = {
+    key       = var.OPENAI_API_KEY
+  }
+}
+
+
 # resource "argocd_application" "fos" {
 
 
