@@ -4,7 +4,7 @@
 
 
 data "digitalocean_domain" "fos" {
-  name = "fosforescent.com"
+  name = local.fos_domain[terraform.workspace]
 }
 
 resource "digitalocean_record" "fos_info_cname_record" {
@@ -22,8 +22,16 @@ resource "digitalocean_record" "fos_api_a_record" {
   name   = "api"
   value  = data.kubernetes_service.nginx_lb.status.0.load_balancer.0.ingress.0.ip
   ttl    = 3600
-  depends_on = [ kubectl_manifest.fos_argo_app ]
+  depends_on = [ ]
 }
+
+
+
+resource "kubectl_manifest" "fos_argo_app" {
+  yaml_body = file(local.fos_argo_manifest_path[terraform.workspace])
+  depends_on = [ argocd_project.fos-project, kubernetes_secret.fos_db_credentials]
+}
+
 
 
 
@@ -49,19 +57,26 @@ resource "argocd_project" "fos-project" {
   }
 }
 
-
-
-resource "kubectl_manifest" "fos_argo_app" {
-  yaml_body = file("../../argo/apps/fos-web-backend/app.yml")
-  depends_on = [ argocd_project.fos-project]
+resource "argocd_repository" "fos_web_infra" {
+  repo = "https://github.com/fosforescent/fos-web-infra"
+  username = "davidmnoll"
+  password = var.FOS_GITHUB_TOKEN
+  name = "fos-web-infra"
 }
+
+
+
+# resource "kubectl_manifest" "fos_argo_app" {
+#   yaml_body = file("../../argo/apps/fos-web-backend/app.yml")
+#   depends_on = [ argocd_project.fos-project]
+# }
 
 
 
 
 data "digitalocean_database_user" "fos_web_user" {
   cluster_id = data.digitalocean_database_cluster.postgres_cluster.id
-  name       = "fos-web-backend-user"
+  name       = local.fos_db_user_name[terraform.workspace]
 }
 
 
@@ -78,8 +93,8 @@ resource "kubernetes_secret" "fos_db_credentials" {
     password = data.digitalocean_database_user.fos_web_user.password
     host     = data.digitalocean_database_cluster.postgres_cluster.host
     port     = tostring(data.digitalocean_database_cluster.postgres_cluster.port)
-    dbname   = "fos-web-backend"
-    url      = "postgresql://${data.digitalocean_database_user.fos_web_user.name}:${data.digitalocean_database_user.fos_web_user.password}@${data.digitalocean_database_cluster.postgres_cluster.host}:${tostring(data.digitalocean_database_cluster.postgres_cluster.port)}/fos-web-backend"
+    dbname   = local.fos_db_name[terraform.workspace]
+    url      = "postgresql://${data.digitalocean_database_user.fos_web_user.name}:${data.digitalocean_database_user.fos_web_user.password}@${data.digitalocean_database_cluster.postgres_cluster.host}:${tostring(data.digitalocean_database_cluster.postgres_cluster.port)}/${local.fos_db_name[terraform.workspace]}"
   }
 }
 
@@ -96,41 +111,3 @@ resource "kubernetes_secret" "fos_openai_credentials" {
 }
 
 
-# resource "argocd_application" "fos" {
-
-
-#   metadata {
-#     name      = "fos-web-backend"
-#     namespace = "argocd"
-#   }
-
-#   spec {
-#     project = "fos-project"
-
-
-#     destination {
-#       server    = "https://kubernetes.default.svc"
-#       namespace = "fos"
-#     }
-
-#     source {
-#       repo_url        = "https://github.com/syc-tech/infra"
-#       path            = "helm-charts/temporal"
-
-#       helm {
-#         release_name = "fos-backend01"
-
-
-#         values = yamlencode({
-#           someparameter = {
-#             enabled   = true
-#             someArray = ["foo", "bar"]
-#           }
-#         })
-
-
-#       }
-#     }
-#   }
-#   depends_on = [ kubectl_manifest.argo_temporal_project_config ]
-# }

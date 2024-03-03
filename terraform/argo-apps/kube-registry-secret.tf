@@ -3,11 +3,12 @@
 
 
 data "digitalocean_container_registry" "primary" {
-  name = "dmn-kubernetes-registry"
+  name = local.registry_name[terraform.workspace]
 }
 
 resource "digitalocean_container_registry_docker_credentials" "kubernetes_registry_credentials" {
   registry_name = data.digitalocean_container_registry.primary.name
+  
 }
 
 

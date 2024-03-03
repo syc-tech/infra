@@ -54,11 +54,11 @@ resource "random_id" "cluster_name" {
 
 
 data "digitalocean_kubernetes_cluster" "primary" {
-  name = "main-cluster"
+  name = local.cluster_name[terraform.workspace]
 }
 
 data "digitalocean_container_registry" "primary" {
-  name = "dmn-kubernetes-registry"
+  name = local.registry_name[terraform.workspace]
 }
 
 # data "digitalocean_container_registry_docker_credentials" "primary" {
@@ -70,7 +70,7 @@ module "kubernetes_config" {
   kube_config = data.digitalocean_kubernetes_cluster.primary.kube_config
   cluster_name     = data.digitalocean_kubernetes_cluster.primary.name
   cluster_id       = data.digitalocean_kubernetes_cluster.primary.id
-  write_kubeconfig = true
-  domain = local.dmn_dev_domain
+  write_kubeconfig = local.write_kubeconfig[terraform.workspace]
+  domain = local.dmn_domain[terraform.workspace]
 }
 

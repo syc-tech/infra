@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: syc-app-creator-binding
+subjects:
+- kind: ServiceAccount
+  name: syc-app-creator
+  namespace: syc
+roleRef:
+  kind: ClusterRole
+  name: syc-app-manager
+  apiGroup: rbac.authorization.k8s.io

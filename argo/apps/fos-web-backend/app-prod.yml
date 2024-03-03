@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fos-web-backend
+  namespace: argocd
+spec:
+  project: fos-project
+  source:
+    repoURL: 'https://github.com/fosforescent/fos-web-infra.git'
+    path: ./helm
+    targetRevision: HEAD  
+    helm:
+      valueFiles:
+        - values-prod.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: fos
+  syncPolicy:
+    automated:  
+      prune: true
+      selfHeal: true

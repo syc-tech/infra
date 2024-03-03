@@ -1,17 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: syc-web-backend
+  name: fos-web-backend
   namespace: argocd
 spec:
-  project: syc-project
+  project: fos-project
   source:
-    repoURL: 'https://github.com/syc-tech/infra.git'
-    path: argo/apps/syc-web-backend
+    repoURL: 'https://github.com/fosforescent/fos-web-infra.git'
+    path: ./helm
     targetRevision: HEAD  
+    helm:
+      valueFiles:
+        - values-dev.yaml
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: syc
+    namespace: fos
   syncPolicy:
     automated:  
       prune: true

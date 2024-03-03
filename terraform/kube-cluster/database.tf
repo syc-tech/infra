@@ -1,34 +1,34 @@
 resource "digitalocean_database_cluster" "postgres_cluster" {
-  name       = "syc-postgres-cluster"
+  name       = local.db_cluster_name[terraform.workspace]
   engine     = "pg"
-  version    = "12"
-  size       = "db-s-1vcpu-1gb"
-  region     = "nyc1"
-  node_count = 1
+  version    = local.db_cluster_version[terraform.workspace]
+  size       = local.db_cluster_size[terraform.workspace]
+  region     = local.db_cluster_region[terraform.workspace]
+  node_count = local.db_cluster_node_count[terraform.workspace]
 }
 
 resource "digitalocean_database_db" "fos_db" {
   cluster_id = digitalocean_database_cluster.postgres_cluster.id
-  name       = "fos-web-backend"
+  name       = local.fos_db_name[terraform.workspace]
   depends_on = [ digitalocean_database_cluster.postgres_cluster ]
 }
 
 
 resource "digitalocean_database_user" "fos_user" {
   cluster_id = digitalocean_database_cluster.postgres_cluster.id
-  name       = "fos-web-backend-user"
+  name       = local.fos_db_user_name[terraform.workspace]
   depends_on = [ digitalocean_database_db.fos_db ]
 }
 
 resource "digitalocean_database_db" "syc_db" {
   cluster_id = digitalocean_database_cluster.postgres_cluster.id
-  name       = "syc-web-backend"
+  name       = local.syc_db_name[terraform.workspace]
   depends_on = [ digitalocean_database_cluster.postgres_cluster ]
 }
 
 
 resource "digitalocean_database_user" "syc_user" {
   cluster_id = digitalocean_database_cluster.postgres_cluster.id
-  name       = "syc-web-backend-user"
+  name       = local.syc_db_user_name[terraform.workspace]
   depends_on = [ digitalocean_database_db.fos_db ]
 }

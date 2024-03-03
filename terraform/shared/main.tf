@@ -49,18 +49,5 @@ provider "cloudflare" {
   api_token = var.CLOUDFLARE_TOKEN
 }
 
-module "cluster_setup_instance" {
-  source             = "./do_cluster"
-  cluster_name       = local.cluster_name[terraform.workspace]
-  cluster_region     = "sfo3"
-  cluster_version    = local.cluster_version[terraform.workspace]
-  worker_size        = local.worker_size[terraform.workspace]
-  worker_min         = local.worker_min[terraform.workspace]
-  worker_max         = local.worker_max[terraform.workspace]
-  registry_name      = local.registry_name[terraform.workspace]
-  registry_tier      = local.registry_tier[terraform.workspace]
-  do_token           = var.DO_TOKEN
-}
-
 
 

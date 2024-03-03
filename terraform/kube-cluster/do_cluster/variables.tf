@@ -2,9 +2,14 @@ variable "cluster_version" {
   type = string
 }
 
-variable "worker_count" {
+variable "worker_min" {
   type = number // No longer used, maybe replace with min nodes and max nodes? 
 }
+
+variable "worker_max" {
+  type = number // No longer used, maybe replace with min nodes and max nodes? 
+}
+
 
 variable "worker_size" {
   type = string
@@ -19,5 +24,13 @@ variable "cluster_region" {
 }
 
 variable "do_token" {
+  type = string
+}
+
+variable "registry_name" {
+  type = string
+}
+
+variable "registry_tier" {
   type = string
 }

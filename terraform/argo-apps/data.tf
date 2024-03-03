@@ -8,6 +8,6 @@ data "kubernetes_service" "nginx_lb" {
 
 
 data "digitalocean_database_cluster" "postgres_cluster" {
-  name = "syc-postgres-cluster"
+  name = local.db_cluster_name[terraform.workspace]
 }
 

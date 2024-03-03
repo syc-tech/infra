@@ -1,10 +1,12 @@
+
+
 data "cloudflare_accounts" "accounts" {
 }
 
 resource "cloudflare_pages_project" "fos_pages_project" {
   account_id        = data.cloudflare_accounts.accounts.accounts[0].id
-  name              = "fos-pages-0"
-  production_branch = "main"
+  name              = local.cf_pages_name["prod"]
+  production_branch = local.cf_pages_branch["prod"]
 
 
   build_config {
@@ -16,7 +18,8 @@ resource "cloudflare_pages_project" "fos_pages_project" {
   deployment_configs {
     preview {
       environment_variables = {
-        API_URL = "https://fosforescent.com"
+        FOS_API_URL = "https://api.${local.fos_domain["dev"]}"
+        SYC_API_URL = "https://api.${local.syc_domain["dev"]}"
         NODE_VERSION = "18.17.1"
         NODE_ENV = "production"
       }
@@ -24,7 +27,8 @@ resource "cloudflare_pages_project" "fos_pages_project" {
     }
     production {
       environment_variables = {
-        API_URL = "https://fosforescent.com"
+        FOS_API_URL = "https://api.${local.fos_domain["prod"]}"
+        SYC_API_URL = "https://api.${local.syc_domain["prod"]}"
         NODE_VERSION = "18.17.1"
         NODE_ENV = "production"
       }
@@ -35,6 +39,6 @@ resource "cloudflare_pages_project" "fos_pages_project" {
 
 resource "cloudflare_pages_domain" "fos_pages_domain" {
   account_id   = cloudflare_pages_project.fos_pages_project.account_id
-  project_name = "fos-pages-0"
-  domain       = "app.fosforescent.com"
+  project_name = local.cf_pages_name["prod"]
+  domain       = "www.fosforescent.com"
 }

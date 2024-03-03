@@ -26,8 +26,3 @@ data "kubernetes_ingress_v1" "main_web_ingress" {
     namespace = "default"
   }
 }
-
-resource "digitalocean_domain" "dmn_dev" {
-  name       = local.dmn_dev_domain
-  ip_address = data.kubernetes_ingress_v1.main_web_ingress.status.0.load_balancer.0.ingress.0.ip
-}

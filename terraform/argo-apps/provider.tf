@@ -48,7 +48,7 @@ provider "kubectl" {
 }
 
 data "digitalocean_kubernetes_cluster" "primary" {
-  name = "main-cluster"
+  name = local.cluster_name[terraform.workspace]
 }
 
 data "kubernetes_secret" "argocd_initial_admin_secret" {
@@ -59,8 +59,8 @@ data "kubernetes_secret" "argocd_initial_admin_secret" {
 }
 
 provider "argocd" {
-  server_addr = "argocd.syctech.io"
-  username    = "admin"
+  server_addr = local.argocd_address[terraform.workspace]
+  username    = local.argocd_username[terraform.workspace]
   password    = data.kubernetes_secret.argocd_initial_admin_secret.data["password"]
 }
 

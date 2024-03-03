@@ -18,7 +18,7 @@ resource "kubectl_manifest" "argo_cm" {
 } 
 
 data "digitalocean_domain" "syc" {
-  name = "syctech.io"
+  name = local.syc_domain[terraform.workspace]
 }
 
 
@@ -103,7 +103,7 @@ resource "kubernetes_ingress_v1" "argocd_server_ingress" {
   spec {
     ingress_class_name = "nginx"
     rule {
-      host = "argocd.syctech.io"
+      host = "argocd.${local.syc_domain[terraform.workspace]}"
       http {
         path {
           backend {
@@ -121,7 +121,7 @@ resource "kubernetes_ingress_v1" "argocd_server_ingress" {
       }
     }
     tls {
-      hosts      = ["argocd.syctech.io"]
+      hosts      = ["argocd.${local.syc_domain[terraform.workspace]}"]
       secret_name = "argocd-server-tls"
     }
   }
@@ -141,9 +141,9 @@ resource "kubernetes_manifest" "argocd-certificate" {
         name = "letsencrypt-prod"
         kind = "ClusterIssuer"
       }
-      commonName = "argocd.syctech.io"
+      commonName = "argocd.${local.syc_domain[terraform.workspace]}"
       dnsNames = [
-        "argocd.syctech.io",
+        "argocd.${local.syc_domain[terraform.workspace]}",
       ]
     }
   }

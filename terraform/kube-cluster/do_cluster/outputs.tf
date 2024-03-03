@@ -1,7 +1,4 @@
 
-output "registry_server_url" {
-  value = digitalocean_container_registry.dmn_kubernetes_registry.server_url
-}
 
 # output "load_balancer_id" {
 #   value = digitalocean_loadbalancer.do_lb.id

@@ -9,9 +9,9 @@ resource "digitalocean_kubernetes_cluster" "main_cluster" {
     node_pool {
         auto_scale        = true
         labels            = {}
-        max_nodes         = 5
-        min_nodes         = 2
-        name              = "pool-wcjf2cbdt"
+        max_nodes         = var.worker_max
+        min_nodes         = var.worker_min
+        name              = "cluster-pool-${terraform.workspace}"
         size              = var.worker_size
         tags              = []
     }

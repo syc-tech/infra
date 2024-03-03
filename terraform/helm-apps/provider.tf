@@ -50,7 +50,7 @@ provider "kubectl" {
 
 
 data "digitalocean_container_registry" "main_registry" {
-  name = "dmn-kubernetes-registry"
+  name = local.registry_name[terraform.workspace]
 }
 
 

@@ -1,16 +1,16 @@
 resource "digitalocean_domain" "dmn" {
-  name = "davidmnoll.com"
+  name = local.dmn_domain[terraform.workspace]
 }
 
 
 
 resource "digitalocean_domain" "syc" {
-  name = "syctech.io"
+  name = local.syc_domain[terraform.workspace]
 }
 
 
 resource "digitalocean_domain" "fos" {
-  name = "fosforescent.com"
+  name = local.fos_domain[terraform.workspace]
 }
 
 
