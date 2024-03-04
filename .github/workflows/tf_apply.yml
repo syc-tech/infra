@@ -23,9 +23,24 @@ jobs:
     with:
       step-path: kube-cluster
 
+  apply-shared:
+    uses: ./.github/workflows/tf_apply_step.yml
+    name: Apply cluster plan
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: shared
+    
+
   apply-kube-network:
     uses: ./.github/workflows/tf_apply_step.yml
-    needs: [apply-cluster]
+    needs: [apply-shared]
     name: Apply kube network plan
     secrets:
       DOTENV: ${{ secrets.DOTENV }}

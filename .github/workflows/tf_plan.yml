@@ -17,12 +17,24 @@ jobs:
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
       DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-
-  plan-kube-network:
+  plan-shared:
     if: needs.plan-cluster.outputs.changes != '1' 
     uses: ./.github/workflows/tf_plan_step.yml
     name: Create terraform plan for kube network
     needs: [plan-cluster]
+    with: 
+      step-path: 'shared'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    
+
+  plan-kube-network:
+    if: needs.plan-shared.outputs.changes != '1' 
+    uses: ./.github/workflows/tf_plan_step.yml
+    name: Create terraform plan for kube network
+    needs: [plan-shared]
     with: 
       step-path: 'kube-network'
     secrets:
