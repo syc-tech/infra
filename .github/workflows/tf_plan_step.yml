@@ -97,18 +97,18 @@ jobs:
           name: ${{ inputs.step-path }}-tf-plan
           path: ./${{ inputs.step-path }}-tf-plan
 
-      - name: Comment Plan
-        id: comment-plan
-        if: steps.check_changes.outputs.changes == '1'
-        uses: peter-evans/create-or-update-comment@v2
-        with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            Terraform Plan:
+      # - name: Comment Plan
+      #   id: comment-plan
+      #   if: steps.check_changes.outputs.changes == '1'
+      #   uses: peter-evans/create-or-update-comment@v2
+      #   with:
+      #     issue-number: ${{ github.event.number }}
+      #     body: |
+      #       Terraform Plan:
 
-            ```
-            ${{ steps.plan.outputs.plan }}
-            ```
+      #       ```
+      #       ${{ steps.plan.outputs.plan }}
+      #       ```
 
-            Plan saved to GH artifacts.
+      #       Plan saved to GH artifacts.
             
