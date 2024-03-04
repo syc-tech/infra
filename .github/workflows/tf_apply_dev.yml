@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - none
+      
 permissions:
   contents: read
   pull-requests: write

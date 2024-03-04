@@ -1,6 +1,9 @@
 name: PR Plan
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -12,6 +15,7 @@ jobs:
     name: Create terraform plan for cluster
     with: 
       step-path: 'kube-cluster'
+      workspace: 'prod'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
@@ -24,6 +28,7 @@ jobs:
     needs: [plan-cluster]
     with: 
       step-path: 'shared'
+      workspace: 'prod'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
@@ -37,6 +42,7 @@ jobs:
     needs: [plan-shared]
     with: 
       step-path: 'kube-network'
+      workspace: 'prod'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
@@ -50,6 +56,7 @@ jobs:
     needs: [plan-kube-network]
     with: 
       step-path: 'helm-apps'
+      workspace: 'prod'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
@@ -61,6 +68,7 @@ jobs:
     if: needs.plan-helm-apps.outputs.changes != '1'
     with: 
       step-path: 'argo-apps'
+      workspace: 'prod'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
