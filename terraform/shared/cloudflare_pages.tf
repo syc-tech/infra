@@ -24,6 +24,7 @@ resource "cloudflare_pages_project" "fos_pages_project" {
         NODE_ENV = "production"
       }
       fail_open = true
+      usage_model = "standard"
     }
     production {
       environment_variables = {
@@ -33,6 +34,7 @@ resource "cloudflare_pages_project" "fos_pages_project" {
         NODE_ENV = "production"
       }
       fail_open = true
+      usage_model = "standard"
     }
   }
 }
