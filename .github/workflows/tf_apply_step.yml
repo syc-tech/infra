@@ -74,12 +74,12 @@ jobs:
             | jq -r '.items[0].number')
           echo "PR_ID=$PR_ID" >> $GITHUB_ENV
 
-      - name: Terraform select workspace
-        run: cd terraform/${{ inputs.step-path }} && terraform workspace select ${{ inputs.workspace }}
-  
       - name: Terraform init
         run: cd terraform/${{ inputs.step-path }} && make init
 
+      - name: Terraform select workspace
+        run: cd terraform/${{ inputs.step-path }} && terraform workspace select ${{ inputs.workspace }}
+  
       - name: Terraform refresh
         run: cd terraform/${{ inputs.step-path }} && make refresh
 

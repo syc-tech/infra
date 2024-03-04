@@ -55,13 +55,13 @@ jobs:
 
       # - name: configure aws cli
       #   run: aws configure --profile digitalocean && export AWS_PROFILE=digitalocean
-      - name: Terraform select workspace
-        run: cd terraform/${{ inputs.step-path }} && terraform workspace select ${{ inputs.workspace }}
-
       - name: Terraform init
         env:
           TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: cd terraform/${{ inputs.step-path }} && make init
+
+      - name: Terraform select workspace
+        run: cd terraform/${{ inputs.step-path }} && terraform workspace select ${{ inputs.workspace }}
 
       - name: Terraform refresh
         run: cd terraform/${{ inputs.step-path }} && make refresh
