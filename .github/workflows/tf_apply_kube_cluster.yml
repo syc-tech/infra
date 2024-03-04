@@ -1,0 +1,88 @@
+name: Apply
+
+on:
+  push:
+    branches:
+      - none
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  apply-cluster:
+    uses: ./.github/workflows/tf_apply_step.yml
+    name: Apply cluster plan
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: kube-cluster
+
+  apply-shared:
+    uses: ./.github/workflows/tf_apply_step.yml
+    name: Apply cluster plan
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: shared
+    
+
+  apply-kube-network:
+    uses: ./.github/workflows/tf_apply_step.yml
+    needs: [apply-shared]
+    name: Apply kube network plan
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: kube-network
+    
+
+
+  apply-helm-apps:
+    uses: ./.github/workflows/tf_apply_step.yml
+    needs: [apply-kube-network]
+    name: Apply helm apps plan
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: helm-apps
+    
+
+  apply-argo-apps:
+    uses: ./.github/workflows/tf_apply_step.yml
+    needs: [apply-helm-apps]
+    name: Apply argo apps plan
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: argo-apps
+
