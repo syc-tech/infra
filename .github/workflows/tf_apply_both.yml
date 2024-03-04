@@ -1,0 +1,45 @@
+name: Apply Step to both Envs
+
+on:
+  workflow_dispatch:
+    inputs:
+      step-path:
+        description: "Path to the terraform step"
+        required: true
+        default: "argo-apps"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  apply-dev:
+    uses: ./.github/workflows/tf_apply_step.yml
+    name: Apply cluster plan
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: kube-cluster
+      workspace: dev
+
+  apply-prod:
+    uses: ./.github/workflows/tf_apply_step.yml
+    name: Apply cluster plan
+    needs: [apply-dev]
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      GITHUB_TOKEN_VAL: ${{ secrets.GITHUB_TOKEN }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      TF_VAR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
+    with:
+      step-path: kube-cluster
+      workspace: prod

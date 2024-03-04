@@ -1,0 +1,37 @@
+name: Plan step for both Envs
+
+on:
+  workflow_dispatch:
+    inputs:
+      step-path:
+        description: "Path to the terraform step"
+        required: true
+        default: "argo-apps"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  plan-dev:
+    uses: ./.github/workflows/tf_plan_step.yml
+    name: Create terraform plan for helm apps
+    with: 
+      step-path: step-path
+      workspace: 'dev'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+  plan-prod:
+    uses: ./.github/workflows/tf_plan_step.yml
+    name: Create terraform plan for helm apps
+    needs: [plan-dev]
+    with: 
+      step-path: step-path
+      workspace: 'prod'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}

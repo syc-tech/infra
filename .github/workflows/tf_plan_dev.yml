@@ -1,0 +1,77 @@
+name: PR Plan
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  plan-cluster:
+    uses: ./.github/workflows/tf_plan_step.yml
+    name: Create terraform plan for cluster
+    with: 
+      step-path: 'kube-cluster'
+      workspace: 'dev'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+  plan-shared:
+    if: needs.plan-cluster.outputs.changes != '1' 
+    uses: ./.github/workflows/tf_plan_step.yml
+    name: Create terraform plan for kube network
+    needs: [plan-cluster]
+    with: 
+      step-path: 'shared'
+      workspace: 'dev'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    
+
+  plan-kube-network:
+    if: needs.plan-shared.outputs.changes != '1' 
+    uses: ./.github/workflows/tf_plan_step.yml
+    name: Create terraform plan for kube network
+    needs: [plan-shared]
+    with: 
+      step-path: 'kube-network'
+      workspace: 'dev'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    
+
+  plan-helm-apps:
+    if: needs.plan-kube-network.outputs.changes != '1' 
+    uses: ./.github/workflows/tf_plan_step.yml
+    name: Create terraform plan for helm apps
+    needs: [plan-kube-network]
+    with: 
+      step-path: 'helm-apps'
+      workspace: 'dev'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+
+  plan-argo-apps:
+    uses: ./.github/workflows/tf_plan_step.yml
+    if: needs.plan-helm-apps.outputs.changes != '1'
+    with: 
+      step-path: 'argo-apps'
+      workspace: 'dev'
+    secrets:
+      DOTENV: ${{ secrets.DOTENV }}
+      BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    name: Create terraform plan
+    needs: [plan-helm-apps]

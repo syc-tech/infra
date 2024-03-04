@@ -4,17 +4,16 @@ name: Terraform Apply Step
 
 
 on:
-  workflow_dispatch:
-    inputs:
-      step-path:
-        description: "Path to the terraform step"
-        required: true
-        default: "argo-apps"
+
   workflow_call:
     inputs:
       step-path:
         required: true
         type: string
+      workspace:
+        required: true
+        type: string
+
     secrets:
       DOTENV:
         required: true
@@ -75,6 +74,9 @@ jobs:
             | jq -r '.items[0].number')
           echo "PR_ID=$PR_ID" >> $GITHUB_ENV
 
+      - name: Terraform select workspace
+        run: cd terraform/${{ inputs.step-path }} && terraform workspace select ${{ inputs.workspace }}
+  
       - name: Terraform init
         run: cd terraform/${{ inputs.step-path }} && make init
 

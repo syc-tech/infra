@@ -4,16 +4,14 @@ name: Terraform Plan Step
 
 
 on:
-  workflow_dispatch:
-    inputs:
-      step-path:
-        description: "Path to the terraform step"
-        required: true
-        default: "argo-apps"
 
+  
   workflow_call:
     inputs:
       step-path:
+        required: true
+        type: string
+      workspace:
         required: true
         type: string
     secrets:
@@ -57,7 +55,8 @@ jobs:
 
       # - name: configure aws cli
       #   run: aws configure --profile digitalocean && export AWS_PROFILE=digitalocean
-
+      - name: Terraform select workspace
+        run: cd terraform/${{ inputs.step-path }} && terraform workspace select ${{ inputs.workspace }}
 
       - name: Terraform init
         env:

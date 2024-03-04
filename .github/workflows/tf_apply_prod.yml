@@ -22,6 +22,7 @@ jobs:
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
       step-path: kube-cluster
+      workspace: 'prod'
 
   apply-shared:
     uses: ./.github/workflows/tf_apply_step.yml
@@ -36,6 +37,7 @@ jobs:
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
       step-path: shared
+      workspace: 'prod'
     
 
   apply-kube-network:
@@ -52,6 +54,7 @@ jobs:
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
       step-path: kube-network
+      workspace: 'prod'
     
 
 
@@ -69,6 +72,7 @@ jobs:
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
       step-path: helm-apps
+      workspace: 'prod'
     
 
   apply-argo-apps:
@@ -85,4 +89,5 @@ jobs:
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
       step-path: argo-apps
+      workspace: 'prod'
 
