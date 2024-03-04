@@ -30,7 +30,7 @@ jobs:
 
   apply-shared:
     uses: ./.github/workflows/tf_apply_step.yml
-    name: Apply cluster plan
+    name: Apply shared step plan
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}

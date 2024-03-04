@@ -27,7 +27,7 @@ jobs:
   plan-shared:
     if: needs.plan-cluster.outputs.changes != '1' 
     uses: ./.github/workflows/tf_plan_step.yml
-    name: Create terraform plan for kube network
+    name: Create terraform plan for shared
     needs: [plan-cluster]
     with: 
       step-path: 'shared'
