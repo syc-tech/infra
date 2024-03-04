@@ -1,9 +1,12 @@
-name: PR Plan
+name: Plan for prod env
 
 on:
   push:
+    # paths:
+    #   - terraform/**/*
     branches:
       - main
+  
 
 permissions:
   contents: read

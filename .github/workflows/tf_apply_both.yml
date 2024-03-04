@@ -25,7 +25,7 @@ jobs:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
-      step-path: kube-cluster
+      step-path: ${{ inputs.step-path }}
       workspace: dev
 
   apply-prod:
@@ -41,5 +41,5 @@ jobs:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
-      step-path: kube-cluster
+      step-path: ${{ inputs.step-path }}
       workspace: prod

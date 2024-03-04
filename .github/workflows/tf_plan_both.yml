@@ -17,7 +17,7 @@ jobs:
     uses: ./.github/workflows/tf_plan_step.yml
     name: Create terraform plan for helm apps
     with: 
-      step-path: step-path
+      step-path: ${{ inputs.step-path }}
       workspace: 'dev'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
@@ -29,7 +29,7 @@ jobs:
     name: Create terraform plan for helm apps
     needs: [plan-dev]
     with: 
-      step-path: step-path
+      step-path: ${{ inputs.step-path }}
       workspace: 'prod'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}

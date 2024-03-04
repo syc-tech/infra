@@ -1,7 +1,9 @@
-name: PR Plan
+name: Plan for dev env
 
 on:
   push:
+    # paths:
+    #   - terraform/**/*
     branches:
       - dev
 

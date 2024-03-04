@@ -1,11 +1,7 @@
 
 name: Terraform Plan Step
 
-
-
 on:
-
-  
   workflow_call:
     inputs:
       step-path:

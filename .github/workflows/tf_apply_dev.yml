@@ -1,10 +1,13 @@
-name: Apply
+name: Apply to Dev Env
 
 on:
   push:
     branches:
       - none
-      
+    paths:
+      - terraform/**/*
+  workflow_dispatch:
+        
 permissions:
   contents: read
   pull-requests: write
