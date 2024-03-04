@@ -42,7 +42,7 @@ jobs:
       TF_VAR_REGISTRY_CREDENTIALS: ${{ secrets.REGISTRY_CREDENTIALS }}
     with:
       step-path: shared
-      workspace: 'prod'
+      workspace: 'default'
     
 
   apply-kube-network:

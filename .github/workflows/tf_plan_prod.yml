@@ -31,7 +31,7 @@ jobs:
     needs: [plan-cluster]
     with: 
       step-path: 'shared'
-      workspace: 'prod'
+      workspace: 'default'
     secrets:
       DOTENV: ${{ secrets.DOTENV }}
       BACKEND_CONFIG: ${{ secrets.BACKEND_CONFIG }}
