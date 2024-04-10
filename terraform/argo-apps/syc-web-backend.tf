@@ -157,3 +157,14 @@ resource "kubernetes_secret" "syc_email_webhook_info" {
 }
 
 
+resource "kubernetes_secret" "syc_openai_credentials" {
+  metadata {
+    name      = "syc-openai-credentials"
+    namespace = "syc"
+  }
+
+  data = {
+    key       = var.OPENAI_API_KEY
+  }
+}
+
