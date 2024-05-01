@@ -113,7 +113,7 @@ resource "kubernetes_secret" "syc_db_credentials" {
     host     = data.digitalocean_database_cluster.postgres_cluster.host
     port     = tostring(data.digitalocean_database_cluster.postgres_cluster.port)
     dbname   = local.syc_db_name[terraform.workspace]
-    url      = "postgresql://${data.digitalocean_database_user.syc_web_user.name}:${data.digitalocean_database_user.syc_web_user.password}@${data.digitalocean_database_cluster.postgres_cluster.host}:${tostring(data.digitalocean_database_cluster.postgres_cluster.port)}/${local.syc_db_name[terraform.workspace]}"
+    url      = "postgresql://${data.digitalocean_database_user.syc_web_user.name}:${data.digitalocean_database_user.syc_web_user.password}@${data.digitalocean_database_cluster.postgres_cluster.host}:${tostring(data.digitalocean_database_cluster.postgres_cluster.port)}/${local.syc_db_name[terraform.workspace]}?connection_limit=5"
   }
 }
 
