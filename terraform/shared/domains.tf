@@ -9,9 +9,9 @@ data "digitalocean_domain" "fos" {
   name = "fosforescent.com"
 }
 
-# data "digitalocean_domain" "dmn" {
-#   name = "davidmnoll.com"
-# }
+data "digitalocean_domain" "dmn" {
+  name = "davidmnoll.com"
+}
 
 
 resource "digitalocean_record" "fos_app_record" {
@@ -92,6 +92,15 @@ resource "digitalocean_record" "dev_syc_ns_record3" {
   depends_on = [ ]
 }
 
+
+resource "digitalocean_record" "dmn__gh_page_record" {
+  domain = data.digitalocean_domain.dmn.name
+  type   = "CNAME"
+  name   = "www"
+  value  = "davidmnoll.github.io."
+  ttl    = 3600
+  depends_on = [ ]
+}
 
 
 # resource "digitalocean_record" "dev_dmn_ns_record1" {
